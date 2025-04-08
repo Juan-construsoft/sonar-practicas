@@ -1,14 +1,36 @@
 name: SonarCloud Scan
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: SonarCloud Scan
-      uses: sonarsource/sonarcloud-github-action@master
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      # 1. Descarga el código
+      - name: Check out the repository
+        uses: actions/checkout@v3
+
+      # 2. (Opcional según el lenguaje) Construir o instalar dependencias
+      #    Ajusta los comandos a tu proyecto. Ejemplos:
+      # - run: mvn clean install
+      # - run: npm install && npm run build
+      # - run: dotnet build
+      # - run: pip install -r requirements.txt
+
+      # 3. Escaneo con SonarCloud
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@v1.8
+        with:
+          args: >
+            -Dsonar.projectKey=TU_PROJECT_KEY
+            -Dsonar.organization=TU_ORGANIZACION
+            -Dsonar.host.url=https://sonarcloud.io
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
