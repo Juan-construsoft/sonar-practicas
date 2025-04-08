@@ -1,4 +1,5 @@
-name: SonarCloud Scan
+name: Build & Analyze with SonarCloud
+
 on:
   push:
     branches:
@@ -8,29 +9,22 @@ on:
       - main
 
 jobs:
-  build:
+  build-and-analyze:
     runs-on: ubuntu-latest
     steps:
-      # 1. Descarga el código
       - name: Check out the repository
         uses: actions/checkout@v3
 
-      # 2. (Opcional según el lenguaje) Construir o instalar dependencias
-      #    Ajusta los comandos a tu proyecto. Ejemplos:
-      # - run: mvn clean install
-      # - run: npm install && npm run build
-      # - run: dotnet build
-      # - run: pip install -r requirements.txt
+      - name: Build
+        run: echo "Aquí iría el comando para compilar tu proyecto, si aplica."
 
-      # 3. Escaneo con SonarCloud
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v1.8
         with:
           args: >
-            -Dsonar.projectKey=TU_PROJECT_KEY
-            -Dsonar.organization=TU_ORGANIZACION
+            -Dsonar.projectKey=TU_ORG_sonar-practicas
+            -Dsonar.organization=TU_ORG
             -Dsonar.host.url=https://sonarcloud.io
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
